@@ -1,8 +1,8 @@
-#include "esphome/defines.h"
-
-#include "esphome/helpers.h"
-#include "esphome/spi_component.h"
-#include "esphome/time/rtc_component.h"
+//#include "esphome/defines.h"
+#include "esphome/core/defines.h"
+#include "esphome/core/helpers.h"
+#include "esphome/components/spi/spi.h"
+#include "time.h"
 
 ESPHOME_NAMESPACE_BEGIN
 
@@ -68,7 +68,7 @@ protected:
 ESPHOME_NAMESPACE_END
 
 
-#include "esphome/log.h"
+#include "esphome/core/log.h"
 
 ESPHOME_NAMESPACE_BEGIN
 
