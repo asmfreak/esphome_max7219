@@ -11,7 +11,6 @@ namespace display {
 extern const uint8_t MAX7219_ASCII_TO_RAW[94] PROGMEM;
 
 class MAX7219GridComponent;
-//using namespace esphome::uart;
 
 using max7219_writer_t = std::function<void(MAX7219GridComponent &)>;
 
