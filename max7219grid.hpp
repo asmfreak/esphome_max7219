@@ -1,8 +1,8 @@
-#include "esphome/defines.h"
-
-#include "esphome/helpers.h"
-#include "esphome/spi_component.h"
-#include "esphome/time/rtc_component.h"
+//#include "esphome/defines.h"
+#include "esphome/core/defines.h"
+#include "esphome/core/helpers.h"
+#include "esphome/components/spi/spi.h"
+#include "time.h"
 
 ESPHOME_NAMESPACE_BEGIN
 
@@ -11,6 +11,7 @@ namespace display {
 extern const uint8_t MAX7219_ASCII_TO_RAW[94] PROGMEM;
 
 class MAX7219GridComponent;
+//using namespace esphome::uart;
 
 using max7219_writer_t = std::function<void(MAX7219GridComponent &)>;
 
@@ -68,7 +69,7 @@ protected:
 ESPHOME_NAMESPACE_END
 
 
-#include "esphome/log.h"
+#include "esphome/core/log.h"
 
 ESPHOME_NAMESPACE_BEGIN
 
