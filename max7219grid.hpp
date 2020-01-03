@@ -1,10 +1,10 @@
-#include "esphome/defines.h"
+#include "esphome/core/defines.h"
+#include "esphome/core/helpers.h"
+#include "esphome/components/spi/spi.h"
+#include "time.h"
+#include "esphome/core/component.h"
 
-#include "esphome/helpers.h"
-#include "esphome/spi_component.h"
-#include "esphome/time/rtc_component.h"
-
-ESPHOME_NAMESPACE_BEGIN
+namespace esphome {
 
 namespace display {
 
@@ -14,7 +14,9 @@ class MAX7219GridComponent;
 
 using max7219_writer_t = std::function<void(MAX7219GridComponent &)>;
 
-class MAX7219GridComponent : public PollingComponent, public SPIDevice {
+class MAX7219GridComponent : public PollingComponent,
+                             public SPIDevice<spi::BIT_ORDER_MSB_FIRST, spi::CLOCK_POLARITY_LOW,
+                                                 spi::CLOCK_PHASE_LEADING, spi::DATA_RATE_2MHZ> {
 public:
   MAX7219GridComponent(SPIComponent *parent, GPIOPin *cs, uint32_t update_interval = 1000);
 
@@ -55,7 +57,6 @@ public:
 protected:
   void send_byte_(uint8_t a_register, uint8_t data);
   void send_to_all_(uint8_t a_register, uint8_t data);
-  bool is_device_msb_first() override;
 
   uint8_t intensity_{15};
   uint8_t num_chips_{1};
@@ -65,12 +66,12 @@ protected:
 
 } // namespace display
 
-ESPHOME_NAMESPACE_END
+}
 
 
-#include "esphome/log.h"
+#include "esphome/core/log.h"
 
-ESPHOME_NAMESPACE_BEGIN
+namespace esphome {
 
 namespace display {
 
@@ -89,7 +90,7 @@ constexpr uint8_t MAX7219_DISPLAY_TEST = 0x01;
 MAX7219GridComponent::MAX7219GridComponent(SPIComponent *parent, GPIOPin *cs, uint32_t update_interval)
   : PollingComponent(update_interval), SPIDevice(parent, cs) {}
 
-float MAX7219GridComponent::get_setup_priority() const { return setup_priority::POST_HARDWARE; }
+float MAX7219GridComponent::get_setup_priority() const { return  esphome::setup_priority::DATA; }
 void MAX7219GridComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up MAX7219...");
   this->spi_setup();
@@ -139,7 +140,6 @@ void MAX7219GridComponent::send_to_all_(uint8_t a_register, uint8_t data) {
     this->send_byte_(a_register, data);
   this->disable();
 }
-bool MAX7219GridComponent::is_device_msb_first() { return true; }
 void MAX7219GridComponent::update() {
   for (uint8_t i = 0; i < this->num_chips_ * 8; i++){
     this->buffer_[i] = 0;
@@ -222,4 +222,4 @@ uint8_t MAX7219GridComponent::strftime(const char *format, time::ESPTime time) {
 
 } // namespace display
 
-ESPHOME_NAMESPACE_END
+}
